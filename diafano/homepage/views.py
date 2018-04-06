@@ -22,6 +22,8 @@ firebase = pyrebase.initialize_app(firebase_config)
 auth = firebase.auth()
 database = firebase.database()
 
+def landing(request):
+    return render(request,"landing.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
 
 def signIn(request):
     return render(request,"signIn.html")
