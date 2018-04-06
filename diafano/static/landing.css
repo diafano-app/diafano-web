@@ -1,0 +1,102 @@
+/* landing styles */
+.landing {
+  color: #20232a;
+  box-sizing: border-box;
+  background: rgba(255,255,255,0.7);
+	position: absolute;
+	z-index: 20;
+	width: 100%;
+	opacity: 1;
+}
+
+/* landing section - upper and align */
+.landing section {
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	max-width: 1024px;
+	margin: 0 auto;
+	min-height: 833px;
+}
+
+.landing section.upper {
+  transform: translateX(-50%);
+	position: absolute;
+	height: auto;
+	min-height: 0;
+	width: 100%;
+	left: 50%;
+}
+
+.landing section > div {
+	box-sizing: border-box;
+	padding: 0 100px;
+	display: flex;
+	flex: 1 1 auto;
+}
+
+.landing section > div .align {
+	flex: 1 1 auto;
+}
+
+/* project styles */
+.landing .project {
+	align-items: center;
+	margin: 30px 0 0;
+}
+
+.landing .project .logo {
+	background-image: url("./assets/diafano_logo.png");
+	margin: 30px 0;
+	width: 500px;
+	height: 159px;
+}
+
+.landing .project .type {
+	flex: 0 0 auto;
+	font-weight: 500;
+	font-size: 24px;
+	padding: 0 0 0 6px;
+}
+
+/* text styles */
+.landing h1 {
+	line-height: 1.8em;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 400;
+	font-size: 40px;
+	margin-bottom: 50px;
+}
+
+.landing h2 {
+	line-height: 1.6em;
+	font-size: 20px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+	margin-bottom: 60px;
+	color: rgba(31,39,41,0.66);
+}
+
+.landing h2 span {
+	color: #20232a;
+}
+
+/* .landing p {
+	text-align: left;
+	line-height: 1.4em;
+} */
+
+.landing .action-button {
+	color: #FFF;
+  background-color: #3166bc;
+	margin: 0 0 40px 30px;
+	padding: 12px 48px;
+	font-size: 22px;
+	border-radius: 26px;
+	display: block;
+	position: relative;
+	cursor: pointer;
+	font-weight: 600;
+	letter-spacing: 1px;
+  display: inline-block;
+}
