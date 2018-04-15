@@ -26,13 +26,13 @@ def landing(request):
     return render(request,"landing.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
 
 def signIn(request):
-    return render(request,"signIn.html")
+    return render(request,"signIn.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
 
 def signUp(request):
-    return render(request,"signup.html")
+    return render(request,"signup.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
 
 def postsignup(request):
-    name = request.POST.get('name')
+    name = request.POST.get('username')
     email = request.POST.get('email')
     passw = request.POST.get('pass')
     try:
@@ -43,7 +43,23 @@ def postsignup(request):
         return render(request, "signup.html", { "messg" : message })
         uid = user['localId']
 
-    data = { "name" : name, "status" : "1" }
+    location = {
+        "latitude" : -1,
+        "long" : -1
+    }
 
-    database.child("users").child(uid).child("details").set(data)
-    return render(request,"signIn.html")
+    data = {
+        "bio" : "",
+        "email" : email,
+        "location" : location,
+        "location_share" : "False",
+        "name" : "",
+        "phone_number" : "-1",
+        "profile_picture" : "",
+        "trust_rank" : 0
+    }
+
+    database.child("users").child(name).set(data)
+    
+    # this will be redirecting to settings & dashboard
+    return render(request,"signup.html")
