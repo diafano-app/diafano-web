@@ -89,7 +89,7 @@
 .landing .action-button {
 	color: #FFF;
   background-color: #3166bc;
-	margin: 0 0 40px 30px;
+	/* margin: 0 0 40px 30px; */
 	padding: 12px 48px;
 	font-size: 22px;
 	border-radius: 26px;
@@ -98,5 +98,5 @@
 	cursor: pointer;
 	font-weight: 600;
 	letter-spacing: 1px;
-  display: inline-block;
+  /* display: inline-block; */
 }
