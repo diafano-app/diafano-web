@@ -31,10 +31,49 @@ def signIn(request):
 def signUp(request):
     return render(request,"signup.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
 
+def home(request):
+    return render(request, 'home.html')
+
+def login(request):
+    return render(request, 'log.html')
+
 def postsignup(request):
     name = request.POST.get('username')
     email = request.POST.get('email')
     passw = request.POST.get('pass')
+    try:
+        user = auth.create_user_with_email_and_password(email, passw)
+        uid = user['localId']
+    except:
+        message = "Unable to create account try again"
+        return render(request, "signup.html", { "messg" : message })
+        uid = user['localId']
+
+    location = {
+        "latitude" : -1,
+        "long" : -1
+    }
+
+    data = {
+        "bio" : "",
+        "email" : email,
+        "location" : location,
+        "location_share" : "False",
+        "name" : "",
+        "phone_number" : "-1",
+        "profile_picture" : "",
+        "trust_rank" : 0
+    }
+
+    database.child("users").child(name).set(data)
+    
+    # this will be redirecting to settings & dashboard
+    return render(request,"signup.html")
+
+def postsignup_google(request):
+    name = request.POST.get('username')
+    email = request.POST.get('email')
+    passw = "password"
     try:
         user = auth.create_user_with_email_and_password(email, passw)
         uid = user['localId']
