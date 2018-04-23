@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.contrib.auth import authenticate, login
 
 import pyrebase
 import git
@@ -30,6 +31,9 @@ def signIn(request):
 
 def signUp(request):
     return render(request,"signup.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
+
+def dashboard(request):
+    return render(request,"dashboard.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
 
 def home(request):
     return render(request, 'home.html')
@@ -66,14 +70,16 @@ def postsignup(request):
     }
 
     database.child("users").child(name).set(data)
-    
+
     # this will be redirecting to settings & dashboard
-    return render(request,"signup.html")
+    return render(request,"dashboard.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
 
 def postsignup_google(request):
-    name = request.POST.get('username')
-    email = request.POST.get('email')
-    passw = "password"
+    current_user = request.user
+    name = current_user.user
+    email = current_user.uid
+    passw = current_user.uid
+
     try:
         user = auth.create_user_with_email_and_password(email, passw)
         uid = user['localId']
@@ -99,6 +105,6 @@ def postsignup_google(request):
     }
 
     database.child("users").child(name).set(data)
-    
+
     # this will be redirecting to settings & dashboard
-    return render(request,"signup.html")
+    return render(request,"dashboard.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
