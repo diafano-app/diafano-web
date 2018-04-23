@@ -9,6 +9,7 @@ urlpatterns = [
     path('', views.landing),
     path('signup/', views.signUp, name = 'signup'),
     path('postsignup/', views.postsignup, name = 'postsignup'),
+    path('postsignup_google/', views.postsignup, name = 'postsignup_google'),
     url(r'^admin/', admin.site.urls),
     url(r'^login/$', views.login, name='login'),
     #url(r'^logout/$', views.logout, name='logout'),
