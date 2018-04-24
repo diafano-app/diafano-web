@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+
 
 import pyrebase
 import git
@@ -76,9 +78,10 @@ def postsignup(request):
 
 def postsignup_google(request):
     current_user = request.user
-    name = current_user.user
-    email = current_user.uid
-    passw = current_user.uid
+    print(current_user.email)
+    name = current_user.username
+    email = current_user.email
+    passw = current_user.email
 
     try:
         user = auth.create_user_with_email_and_password(email, passw)
