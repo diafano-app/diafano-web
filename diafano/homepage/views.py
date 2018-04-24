@@ -54,7 +54,7 @@ def postsignup(request):
         message = "Unable to create account try again"
         return render(request, "signup.html", { "messg" : message })
         uid = user['localId']
-
+    local_user = User.objects.create_user(name, email, passw)
     location = {
         "latitude" : -1,
         "long" : -1
