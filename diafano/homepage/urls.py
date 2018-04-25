@@ -8,7 +8,9 @@ from . import views
 urlpatterns = [
     path('', views.landing),
     path('signup/', views.signUp, name = 'signup'),
+    path('signip/', views.signIn, name = 'signin'),
     path('postsignup/', views.postsignup, name = 'postsignup'),
+    path('postsignin/', views.postsignin, name = 'postsignin'),
     path('postsignup_google/', views.postsignup_google, name = 'postsignup_google'),
     url(r'^admin/', admin.site.urls),
     url(r'^login/$', views.login, name='login'),
