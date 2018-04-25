@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 
-
 import pyrebase
 import git
 import sys
@@ -35,7 +34,12 @@ def signUp(request):
     return render(request,"signup.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
 
 def dashboard(request):
-    return render(request,"dashboard.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
+    return render(request,"dashboard.html", {
+        "firebase_apikey" : config['firebaseConfig']['apiKey'],
+        "mapbox_access_token" : config['mapboxgl']['accessToken'],
+        "firebase_authdomain" : config['firebaseConfig']['authDomain'],
+        "firebase_dburl" : config['firebaseConfig']['databaseURL'],
+        "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})
 
 def home(request):
     return render(request, 'home.html')
@@ -52,8 +56,9 @@ def postsignup(request):
         uid = user['localId']
     except:
         message = "Unable to create account try again"
-        return render(request, "signup.html", { "messg" : message })
+        return render(request, "landing.html", { "messg" : message, "mapbox_access_token" : config['mapboxgl']['accessToken'] })
         uid = user['localId']
+
     local_user = User.objects.create_user(name, email, passw)
     location = {
         "latitude" : -1,
@@ -70,15 +75,18 @@ def postsignup(request):
         "profile_picture" : "",
         "trust_rank" : 0
     }
-
     database.child("users").child(name).set(data)
 
     # this will be redirecting to settings & dashboard
-    return render(request,"dashboard.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
+    return render(request,"dashboard.html", {
+        "firebase_apikey" : config['firebaseConfig']['apiKey'],
+        "mapbox_access_token" : config['mapboxgl']['accessToken'],
+        "firebase_authdomain" : config['firebaseConfig']['authDomain'],
+        "firebase_dburl" : config['firebaseConfig']['databaseURL'],
+        "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})
 
 def postsignup_google(request):
     current_user = request.user
-    print(current_user.email)
     name = current_user.username
     email = current_user.email
     passw = current_user.email
@@ -88,7 +96,7 @@ def postsignup_google(request):
         uid = user['localId']
     except:
         message = "Unable to create account try again"
-        return render(request, "signup.html", { "messg" : message })
+        return render(request, "landing.html", { "messg" : message, "mapbox_access_token" : config['mapboxgl']['accessToken'] })
         uid = user['localId']
 
     location = {
@@ -110,4 +118,9 @@ def postsignup_google(request):
     database.child("users").child(name).set(data)
 
     # this will be redirecting to settings & dashboard
-    return render(request,"dashboard.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
+    return render(request,"dashboard.html", {
+        "firebase_apikey" : config['firebaseConfig']['apiKey'],
+        "mapbox_access_token" : config['mapboxgl']['accessToken'],
+        "firebase_authdomain" : config['firebaseConfig']['authDomain'],
+        "firebase_dburl" : config['firebaseConfig']['databaseURL'],
+        "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})
