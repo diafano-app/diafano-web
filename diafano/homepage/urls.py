@@ -12,6 +12,7 @@ urlpatterns = [
     path('postsignup/', views.postsignup, name = 'postsignup'),
     path('postsignin/', views.postsignin, name = 'postsignin'),
     path('postsignup_google/', views.postsignup_google, name = 'postsignup_google'),
+    path('postsignin_google/', views.postsignin_google, name = 'postsignin_google'),
     url(r'^admin/', admin.site.urls),
     url(r'^login/$', views.login, name='login'),
     #url(r'^logout/$', views.logout, name='logout'),
