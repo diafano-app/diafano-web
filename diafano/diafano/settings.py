@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 
 # Application definition
 
@@ -118,7 +119,7 @@ AUTHENTICATION_BACKENDS = (
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 
-#Google API Authorization Credentials
+#Google API Authorizatiidon Credentials
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '371404090251-7qspa6di17lop48jeujpr51h71jkt6sl.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'UF-YT-9EHL1KZp2Ze9ntl0tR' 
 
