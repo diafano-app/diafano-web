@@ -93,17 +93,18 @@
           <span class="logmod__heading-subtitle">Enter your email and password <strong>to sign in</strong></span>
         </div>
         <div class="logmod__form">
-          <form accept-charset="utf-8" action="#" class="simform">
+          <form accept-charset="utf-8" action="/postsignin/" method = "post" class="simform">
+            {% csrf_token %}
             <div class="sminputs">
               <div class="input full">
                 <label class="string optional" for="email">Username*</label>
-                <input class="string optional" maxlength="50" id="user-name" placeholder="Username" type="text" size="50" />
+                <input class="string optional" maxlength="50" id="user-name" name="username" placeholder="Username" type="text" size="50" />
               </div>
             </div>
             <div class="sminputs">
               <div class="input full">
                 <label class="string optional" for="user-pw">Password *</label>
-                <input class="string optional" maxlength="255" id="user-pw" placeholder="Password" type="password" size="50" />
+                <input class="string optional" maxlength="255" id="user-pw" name="pass" placeholder="Password" type="password" size="50" />
                 						<span class="hide-password">Show</span>
               </div>
             </div>
@@ -123,12 +124,12 @@
                 <span>Sign in with <strong>Facebook</strong></span>
               </div>
             </a>
-            <a href="#" class="connect googleplus">
+            <a href="{% url 'social:begin' 'google-oauth2' %}?next=/postsignin_google/" class="connect googleplus">
               <div class="connect__icon">
                 <i class="fa fa-google-plus"></i>
               </div>
               <div class="connect__context">
-                <span>Sign in with <strong>Google+</strong></span>
+                  <span>Sign In with <strong>Google+</strong></span>
               </div>
             </a>
           </div>
