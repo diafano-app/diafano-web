@@ -37,7 +37,8 @@ def signIn(request):
     return render(request,"signIn.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
 
 def signUp(request):
-    if not request.user.is_authenticated:
+    print(request.session)
+    if id not in request.session:
         return render(request,"signup.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
     else:
         return render(request,"dashboard.html", {
@@ -133,7 +134,7 @@ def postsignup_google(request):
         "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})
 
 def postsignin(request):
-    if not request.session._session:
+    if id not in request.session:
         email = request.POST.get('username')
         passw = request.POST.get('pass')
         try:
@@ -193,3 +194,9 @@ def postsignin_google(request):
         except:
             message = "Unable to sign in to account try again"
             return render(request, "landing.html", { "messg" : message, "mapbox_access_token" : config['mapboxgl']['accessToken'] })
+    return render(request,"dashboard.html", {
+        "firebase_apikey" : config['firebaseConfig']['apiKey'],
+        "mapbox_access_token" : config['mapboxgl']['accessToken'],
+        "firebase_authdomain" : config['firebaseConfig']['authDomain'],
+        "firebase_dburl" : config['firebaseConfig']['databaseURL'],
+        "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})  
