@@ -5,15 +5,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
 import pyrebase
-import git
 import sys
 import os.path
-sys.path.append(os.path.abspath("../diafano-vault/"))
+sys.path.append(os.path.abspath("./diafano-vault/"))
 
-credentials_file = "../diafano-vault/credentials.py"
-
-if not os.path.isfile(credentials_file):
-    git.Git("../").clone("https://github.com/mertaytore/diafano-vault.git")
+credentials_file = "diafano-vault/credentials.py"
 
 # import credentials for firebase
 from credentials import export_credentials
@@ -199,4 +195,4 @@ def postsignin_google(request):
         "mapbox_access_token" : config['mapboxgl']['accessToken'],
         "firebase_authdomain" : config['firebaseConfig']['authDomain'],
         "firebase_dburl" : config['firebaseConfig']['databaseURL'],
-        "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})  
+        "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})
