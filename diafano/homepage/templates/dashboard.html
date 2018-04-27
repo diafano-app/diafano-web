@@ -26,21 +26,17 @@
     <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
 </head>
 <body>
-  <ul>
-    <li><a href="/">logout</a></li>
-  </ul>
   <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 
-  <div id='map' style='position: absolute; width: 100%; height: 100%;'></div>
+  <div id='map'>  <div id=wrapper>
+      <ul>
+        <li><a href="/">logout</a></li>
+      </ul></div></div>
+
   <nav style="display: block; position: fixed;">
     <li> <a href="#">Home</a> </li>
   </nav>
-  <style>
-    .mapboxgl-popup {
-        max-width: 400px;
-        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-    }
-  </style>
+
   <script type="text/javascript">
     var firebase_config = {
       apiKey: "{{firebase_apikey}}",
