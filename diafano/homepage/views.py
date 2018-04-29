@@ -82,7 +82,7 @@ def postsignup(request):
             "trust_rank" : 0
         }
         database.child("users").child(name).set(data)
-        
+
         request.session['firebase_user'] = user
         # this will be redirecting to settings & dashboard
         return render(request,"dashboard.html", {
@@ -144,7 +144,7 @@ def postsignup_google(request):
         "mapbox_access_token" : config['mapboxgl']['accessToken'],
         "firebase_authdomain" : config['firebaseConfig']['authDomain'],
         "firebase_dburl" : config['firebaseConfig']['databaseURL'],
-        "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})  
+        "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})
 
 
 def postsignin(request):
@@ -175,7 +175,7 @@ def postsignin(request):
         except:
             message = "Unable to sign in to account try again"
             return render(request, "landing.html", { "messg" : message, "mapbox_access_token" : config['mapboxgl']['accessToken'] })
-    request.session['firebase_user'] = user 
+    request.session['firebase_user'] = user
     return render(request,"dashboard.html", {
         "firebase_apikey" : config['firebaseConfig']['apiKey'],
         "mapbox_access_token" : config['mapboxgl']['accessToken'],
@@ -184,7 +184,7 @@ def postsignin(request):
         "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})
 
 def postsignin_google(request):
-    
+
     current_user = request.user
     name = current_user.username
     email = current_user.email
@@ -205,7 +205,7 @@ def postsignin_google(request):
         message = "Unable to sign in to account try again"
         return render(request, "landing.html", { "messg" : message, "mapbox_access_token" : config['mapboxgl']['accessToken'] })
 
-   
+
 @login_required
 def user_settings(request):
     user = auth.get_account_info(request.session["firebase_user"])
@@ -218,13 +218,13 @@ def user_settings(request):
     users_by_email = users_by_email[username]
     print(users_by_email)
     return render(request, "settings.html", {"username": username, "email": users_by_email['email'],
-    "bio": users_by_email['bio'], "profile_picture": users_by_email['profile_picture'], 
-    "phone_number": users_by_email['phone_number'], 
+    "bio": users_by_email['bio'], "profile_picture": users_by_email['profile_picture'],
+    "phone_number": users_by_email['phone_number'],
     "firebase_apikey" : config['firebaseConfig']['apiKey'],
     "mapbox_access_token" : config['mapboxgl']['accessToken'],
     "firebase_authdomain" : config['firebaseConfig']['authDomain'],
     "firebase_dburl" : config['firebaseConfig']['databaseURL'],
-    "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})  
+    "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})
 
 @login_required
 def update_user_settings(request):
@@ -241,15 +241,10 @@ def update_user_settings(request):
     database.child("users").child(username).child(key).set(value)
 
     return redirect("/settings/", {"username": username, "email": users_by_email['email'],
-    "bio": users_by_email['bio'], "profile_picture": users_by_email['profile_picture'], 
-    "phone_number": users_by_email['phone_number'], 
+    "bio": users_by_email['bio'], "profile_picture": users_by_email['profile_picture'],
+    "phone_number": users_by_email['phone_number'],
     "firebase_apikey" : config['firebaseConfig']['apiKey'],
     "mapbox_access_token" : config['mapboxgl']['accessToken'],
     "firebase_authdomain" : config['firebaseConfig']['authDomain'],
     "firebase_dburl" : config['firebaseConfig']['databaseURL'],
-    "firebase_storagebucket" : config['firebaseConfig']['storageBucket']}) 
-
-
-
-
-
+    "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})
