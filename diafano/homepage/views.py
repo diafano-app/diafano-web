@@ -1,19 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 #from django.contrib.auth.views import logout
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 import pyrebase
-import git
 import sys
 import os.path
 sys.path.append(os.path.abspath("../diafano-vault/"))
 
-credentials_file = "../diafano-vault/credentials.py"
-
-if not os.path.isfile(credentials_file):
-    git.Git("../").clone("https://github.com/mertaytore/diafano-vault.git")
+credentials_file = "diafano-vault/credentials.py"
 
 # import credentials for firebase
 from credentials import export_credentials
@@ -37,6 +34,7 @@ def signIn(request):
     return render(request,"signIn.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
 
 def signUp(request):
+    print(request.user.is_anonymous)
     if request.user.is_anonymous:
         return render(request,"signup.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
     else:
@@ -208,7 +206,7 @@ def postsignin_google(request):
         return render(request, "landing.html", { "messg" : message, "mapbox_access_token" : config['mapboxgl']['accessToken'] })
 
    
-
+@login_required
 def user_settings(request):
     user = auth.get_account_info(request.session["firebase_user"])
 
@@ -218,8 +216,40 @@ def user_settings(request):
     users_by_email = dict(users_by_email)
     username = list(users_by_email)[0]
     users_by_email = users_by_email[username]
-
+    print(users_by_email)
     return render(request, "settings.html", {"username": username, "email": users_by_email['email'],
     "bio": users_by_email['bio'], "profile_picture": users_by_email['profile_picture'], 
-    "phone_number": users_by_email['phone_number']})
+    "phone_number": users_by_email['phone_number'], 
+    "firebase_apikey" : config['firebaseConfig']['apiKey'],
+    "mapbox_access_token" : config['mapboxgl']['accessToken'],
+    "firebase_authdomain" : config['firebaseConfig']['authDomain'],
+    "firebase_dburl" : config['firebaseConfig']['databaseURL'],
+    "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})  
+
+@login_required
+def update_user_settings(request):
+    user = auth.get_account_info(request.session["firebase_user"])
+    print(request.POST.get('key'), request.POST.get('value'))
+    key = request.POST.get('key')
+    value = request.POST.get('value')
+
+    email  = user['users'][0]['providerUserInfo'][0]["email"]
+    users_by_email = database.child("users").order_by_child("email").equal_to(email).get().val()
+    users_by_email = dict(users_by_email)
+    username = list(users_by_email)[0]
+    users_by_email = users_by_email[username]
+    database.child("users").child(username).child(key).set(value)
+
+    return redirect("/settings/", {"username": username, "email": users_by_email['email'],
+    "bio": users_by_email['bio'], "profile_picture": users_by_email['profile_picture'], 
+    "phone_number": users_by_email['phone_number'], 
+    "firebase_apikey" : config['firebaseConfig']['apiKey'],
+    "mapbox_access_token" : config['mapboxgl']['accessToken'],
+    "firebase_authdomain" : config['firebaseConfig']['authDomain'],
+    "firebase_dburl" : config['firebaseConfig']['databaseURL'],
+    "firebase_storagebucket" : config['firebaseConfig']['storageBucket']}) 
+
+
+
+
 

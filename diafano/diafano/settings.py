@@ -25,7 +25,7 @@ SECRET_KEY = '1w6(xz8@)%c=(p2cf!qo%0_f$i(%d_!!b*6ctnakiw+8$#l$1('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+['diafano.net', '127.0.0.1', 'localhost']
 
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 
@@ -112,7 +112,7 @@ AUTHENTICATION_BACKENDS = (
  'social_core.backends.google.GoogleOAuth2',  # for Google authentication
  'social_core.backends.github.GithubOAuth2',  # for Github authentication
  'social_core.backends.facebook.FacebookOAuth2',  # for Facebook authentication
- 
+
  'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -121,7 +121,7 @@ LOGIN_REDIRECT_URL = 'home'
 
 #Google API Authorizatiidon Credentials
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '371404090251-7qspa6di17lop48jeujpr51h71jkt6sl.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'UF-YT-9EHL1KZp2Ze9ntl0tR' 
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'UF-YT-9EHL1KZp2Ze9ntl0tR'
 
 SOCIAL_AUTH_FACEBOOK_KEY = '1872376056122458'  # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = '55afb76afe0c21b5c71505583934d03e'
@@ -133,7 +133,7 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True     
+USE_I18N = True
 
 USE_L10N = True
 
