@@ -20,6 +20,10 @@
         //document.getElementById("dThreshold").display ="block";
         document.getElementById("bio-input").style.display = "block";
     }
+    function show_pic() {
+        //document.getElementById("dThreshold").display ="block";
+        document.getElementById("pic-input").style.display = "block";
+    }
 </script>
 <head>
     <meta charset="UTF-8">
@@ -110,6 +114,25 @@
                                       <input id="key" name = "key" type="hidden" value="bio">
                                       <input type="submit" value="submit">
                                   </div>
+                              </form>
+                             
+                          </div>
+              </div>
+            </div>
+             </div>
+              <div class="sminputs">
+                    <div class="input full" style="height: 10%;">
+                            <label id="string-optional" for="pic">Upload your picture</label>
+                            <div id="pic">
+                            <a href="javascript: show_pic()">Choose</a>
+                            <form action="/update_pic/" method = 'post' enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div id = "pic-input"  style="display: none">
+                                        <input type="file" name="pic" accept="image/*">
+                                        <input id="key" name = "key" type="hidden" value="bio">
+                                        <input type="submit" value="upload">
+                                    </div>
+                                
                               </form>
                              
                           </div>

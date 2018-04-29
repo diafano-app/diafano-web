@@ -21,6 +21,7 @@ firebase_config = config['firebaseConfig']
 firebase = pyrebase.initialize_app(firebase_config)
 auth = firebase.auth()
 database = firebase.database()
+storage = firebase.storage()
 
 def landing(request):
     return render(request,"landing.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
@@ -78,7 +79,8 @@ def postsignup(request):
             "location_share" : "False",
             "name" : "",
             "phone_number" : "-1",
-            "profile_picture" : "",
+            "profile_picture" : "https://firebasestorage.googleapis.com/v0/b\
+            /diafano-d139c.appspot.com/o/profiledefault.png?alt=media&token=25d375c4-f233-442b-8c1b-1a7b5ab656df",
             "trust_rank" : 0
         }
         database.child("users").child(name).set(data)
@@ -126,7 +128,8 @@ def postsignup_google(request):
             "location_share" : "False",
             "name" : "",
             "phone_number" : "-1",
-            "profile_picture" : "",
+            "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/diafano-d139c.appspot.com/o\
+            /profiledefault.png?alt=media&token=25d375c4-f233-442b-8c1b-1a7b5ab656df",
             "trust_rank" : 0
         }
 
@@ -216,7 +219,7 @@ def user_settings(request):
     users_by_email = dict(users_by_email)
     username = list(users_by_email)[0]
     users_by_email = users_by_email[username]
-    print(users_by_email)
+    
     return render(request, "settings.html", {"username": username, "email": users_by_email['email'],
     "bio": users_by_email['bio'], "profile_picture": users_by_email['profile_picture'],
     "phone_number": users_by_email['phone_number'],
@@ -229,7 +232,7 @@ def user_settings(request):
 @login_required
 def update_user_settings(request):
     user = auth.get_account_info(request.session["firebase_user"])
-    print(request.POST.get('key'), request.POST.get('value'))
+    
     key = request.POST.get('key')
     value = request.POST.get('value')
 
@@ -239,6 +242,34 @@ def update_user_settings(request):
     username = list(users_by_email)[0]
     users_by_email = users_by_email[username]
     database.child("users").child(username).child(key).set(value)
+
+    return redirect("/settings/", {"username": username, "email": users_by_email['email'],
+    "bio": users_by_email['bio'], "profile_picture": users_by_email['profile_picture'],
+    "phone_number": users_by_email['phone_number'],
+    "firebase_apikey" : config['firebaseConfig']['apiKey'],
+    "mapbox_access_token" : config['mapboxgl']['accessToken'],
+    "firebase_authdomain" : config['firebaseConfig']['authDomain'],
+    "firebase_dburl" : config['firebaseConfig']['databaseURL'],
+    "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})
+
+@login_required
+def update_pic(request):
+    user = auth.get_account_info(request.session["firebase_user"])
+   
+    key = request.POST.get('key')
+    value = request.POST.get('value')
+
+    email  = user['users'][0]['providerUserInfo'][0]["email"]
+    users_by_email = database.child("users").order_by_child("email").equal_to(email).get().val()
+    users_by_email = dict(users_by_email)
+    username = list(users_by_email)[0]
+    users_by_email = users_by_email[username]
+
+    pic_name = username + ".jpg"
+    storage.child(pic_name).put(request.FILES['pic'])
+    path_to_pic = storage.child(pic_name).get_url(request.session["firebase_user"])
+    database.child("users").child(username).child("profile_picture").set(path_to_pic)
+    # database.child("users").child(username).child(key).set(value)
 
     return redirect("/settings/", {"username": username, "email": users_by_email['email'],
     "bio": users_by_email['bio'], "profile_picture": users_by_email['profile_picture'],
