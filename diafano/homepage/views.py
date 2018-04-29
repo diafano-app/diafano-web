@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 import pyrebase
 import sys
 import os.path
-sys.path.append(os.path.abspath("../diafano-vault/"))
+sys.path.append(os.path.abspath("./diafano-vault/"))
 
 credentials_file = "diafano-vault/credentials.py"
 
