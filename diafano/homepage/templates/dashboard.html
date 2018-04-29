@@ -16,6 +16,7 @@
     <link rel="stylesheet" type="text/css" href = "{% static 'landing.css' %}">
     <link rel="stylesheet" type="text/css" href = "{% static 'dashboard.css' %}">
     <link rel="stylesheet" type="text/css" href = "{% static 'login.css' %}">
+    <link rel="stylesheet" type="text/css" href = "{% static 'newsfeed.css' %}">
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700|Raleway:300,400,500,600,700" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}"/>
@@ -24,18 +25,91 @@
     <link href='https://api.mapbox.com/mapbox-gl-js/v0.42.0/mapbox-gl.css' rel='stylesheet' />
 
     <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
+    <script src="https://cdn.firebase.com/js/client/1.1.2/firebase.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.0/mustache.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/spin.js/1.2.7/spin.min.js"></script>
 </head>
 <body>
   <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+  <div id=wrapper>
+    <nav >
+      <li><a href="/"><img border="0" alt="home" width="20" height="20" src="{% static 'assets/home.png' %}"></a></li>
+      <li><a href="/"><img border="0" alt="profile" width="20" height="20" src="{% static 'assets/profile.png' %}"></a></li>
+      <li><a href="/"><img border="0" alt="settings" width="20" height="20" src="{% static 'assets/settings.png' %}"></a></li>
+      <li><a href="/"><img border="0" alt="logout" width="20" height="20" src="{% static 'assets/logout.png' %}"></a></li>
+      <hr>
+      <main>
+        <div class='newsfeed'>
+          <div class='newsfeed_header'>
+            <div class='newsfeed_header__left'>
+              <h1>News</h1>
+              <span>All</span>
+              <input id='dropdown' type='checkbox'>
+                <label for='dropdown'>
+                  <img src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/343086/arrowDown.png'>
+                  <ul>
+                    <li>All</li>
+                    <li>Web Design</li>
+                    <li>Web Development</li>
+                  </ul>
+                </label>
+              </input>
+            </div>
+            <div class='newsfeed_header__right'>
+              <h1>Posts</h1>
+              <span>14.2 K</span>
+            </div>
+          </div>
+          <div class='newsfeed_articlecontainer'>
+            <div class='newsfeed_articlecontainer__article' id='first'>
+              <div class='article_published'>
+                <p>Published in</p>
+                <a href='#'>Sideblog</a>
+              </div>
+              <div class='article_title'>
+                <h1>Web Development Reading List #100</h1>
+              </div>
+              <div class='article_content'>
+                <p>What's happening in the industry? What important techniques have emerged recently? What about new case studies, insights, techniques and tools?</p>
+              </div>
+              <div class='article_profile'>
+                <img src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/343086/profile_icon.png'>
+                <a href='https://codepen.io/CubiDesigns' target='_blank'>Reece McDonald</a>
+                <p>3hrs ago</p>
+              </div>
+            </div>
+            <div class='newsfeed_articlecontainer__article' id='second'>
+              <div class='article_published'>
+                <p>Published in</p>
+                <a href='#'>Sideblog</a>
+              </div>
+              <div class='article_title'>
+                <h1>Web Development Reading List #101</h1>
+              </div>
+              <div class='article_content'>
+                <p>What's happening in the industry? What important techniques have emerged recently? What about new case studies, insights, techniques and tools?</p>
+              </div>
+              <div class='article_profile'>
+                <img src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/343086/profile_icon.png'>
+                <a href='https://codepen.io/CubiDesigns' target='_blank'>Reece McDonald</a>
+                <p>3hrs ago</p>
+              </div>
+            </div>
+          </div>
+          <div class='newsfeed_navigation'>
+            <div class='newsfeed_navigation__titlecontainer'>
+              <h1>Web Development Reading List #100</h1>
+              <h1>Web Development Reading List #101</h1>
+            </div>
+            <p>Next: Web Design Conferences Are Booming</p>
+            <div class='newsfeed_navigation__timerbar'></div>
+          </div>
+        </div>
+      </main>
+    </nav>
+  </div>
 
-  <div id='map'>  <div id=wrapper>
-      <ul>
-        <li><a href="/">logout</a></li>
-      </ul></div></div>
-
-  <nav style="display: block; position: fixed;">
-    <li> <a href="#">Home</a> </li>
-  </nav>
+  <div id='map'> </div>
 
   <script type="text/javascript">
     var firebase_config = {
@@ -52,11 +126,12 @@
     var news_markers = [];
     news.on('value', function(snapshot) {
         snapshot.forEach(function(childSnapshot) {
+          // map data
           var childData = childSnapshot.val();
           var news_data = {
               "type": "Feature",
               "properties": {
-                  "description": "<p>" + childData['txt'] + "</p>",
+                  "description": "<p><strong>" + childData['author'] + "</strong><br>" + childData['txt'] + "</p>",
                   "icon": "theatre"
               },
               "geometry": {
@@ -65,6 +140,13 @@
               }
           }
           news_markers.push(news_data);
+
+          // // news feed data
+          // var ul = document.getElementById("news_list");
+          // var li = document.createElement('li');
+          // li.appendChild(document.createTextNode(childData['title']));
+          // ul.appendChild(li);
+
         });
     });
 
@@ -121,6 +203,8 @@
       });
     });
   </script>
+
 <script  src="{% static 'login.js' %}"></script>
+
 </body>
 </html>
