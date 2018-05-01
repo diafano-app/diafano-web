@@ -16,7 +16,7 @@ body .newsfeed {
 }
 body .newsfeed_header {
   width: 100%;
-  height: 100px;
+  height: 10%;
   background: #2a2931;
   border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -172,7 +172,7 @@ body .newsfeed #second {
 }
 body .newsfeed_articlecontainer {
   width: 100%;
-  height: 80%;
+  height: 85%;
   overflow: scroll;
 }
 body .newsfeed_articlecontainer__article {
