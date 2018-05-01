@@ -26,8 +26,8 @@ storage = firebase.storage()
 def landing(request):
     return render(request,"landing.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
 
-def logout(request):
-    [sp.session.delete() for sp in SessionProfile.objects]
+def session_logout(request):
+    # [sp.session.delete() for sp in SessionProfile.objects]
     logout(request)
     return landing(request)
 
@@ -103,7 +103,7 @@ def postsignup(request):
             "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})
 
 def postsignup_google(request):
-    if request.user.is_anonymous:
+    if not request.user.is_anonymous:
         current_user = request.user
         name = current_user.username
         email = current_user.email
@@ -135,8 +135,7 @@ def postsignup_google(request):
         }
 
         database.child("users").child(name).set(data)
-        request.session['firebase_user'] = user
-        request.session['username'] = username
+        request.session['firebase_user'] = user['idToken']
         # this will be redirecting to settings & dashboard
         return render(request,"dashboard.html", {
             "firebase_apikey" : config['firebaseConfig']['apiKey'],
@@ -164,14 +163,14 @@ def postsignin(request):
 
             #uid = user['localId']
             local_user = authenticate(request, username=email, password=passw)
+
             if local_user is not None:
-                if not local_user.is_active:
-                    login(local_user)
+                # if not local_user.is_active:
+                login(request,local_user)
             else:
                 local_user = User.objects.create_user(email, email, passw)
             # Return an 'invalid login' error message.
-            request.session['firebase_user'] = user
-            request.session['username'] = username
+            request.session['firebase_user'] = user['idToken']
             return render(request,"dashboard.html", {
                 "firebase_apikey" : config['firebaseConfig']['apiKey'],
                 "mapbox_access_token" : config['mapboxgl']['accessToken'],
@@ -224,7 +223,7 @@ def user_settings(request):
     users_by_email = dict(users_by_email)
     username = list(users_by_email)[0]
     users_by_email = users_by_email[username]
-    
+
     return render(request, "settings.html", {"username": username, "email": users_by_email['email'],
     "bio": users_by_email['bio'], "profile_picture": users_by_email['profile_picture'],
     "phone_number": users_by_email['phone_number'],
@@ -237,7 +236,7 @@ def user_settings(request):
 @login_required
 def update_user_settings(request):
     user = auth.get_account_info(request.session["firebase_user"])
-    
+
     key = request.POST.get('key')
     value = request.POST.get('value')
 
@@ -260,7 +259,7 @@ def update_user_settings(request):
 @login_required
 def update_pic(request):
     user = auth.get_account_info(request.session["firebase_user"])
-   
+
     key = request.POST.get('key')
     value = request.POST.get('value')
 
@@ -291,15 +290,15 @@ def view_profile(request):
         user = request.GET['name']
     else:
         return HttpResponse('Please submit a search term.')
-    
+
     try:
         users_by_email = database.child("users").child(user).get().val()
     except:
         return HttpResponse('Enter a valid user name!.')
-    
+
     users_by_email = dict(users_by_email)
     username = list(users_by_email)[0]
-    
+
     return render(request, "profile.html", {"username": user, "email": users_by_email['email'],
     "bio": users_by_email['bio'], "profile_picture": users_by_email['profile_picture'],
     "phone_number": users_by_email['phone_number'],
