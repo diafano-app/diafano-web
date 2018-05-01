@@ -25,7 +25,7 @@ SECRET_KEY = '1w6(xz8@)%c=(p2cf!qo%0_f$i(%d_!!b*6ctnakiw+8$#l$1('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-['diafano.net', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['diafano.net', '127.0.0.1', 'localhost']
 
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 
