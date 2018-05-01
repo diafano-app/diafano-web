@@ -34,7 +34,7 @@
   <div id=wrapper>
     <nav >
       <li><a href="/settings/"><img border="0" alt="home" width="20" height="20" src="{% static 'assets/home.png' %}"></a></li>
-      <li><a href="/"><img border="0" alt="profile" width="20" height="20" src="{% static 'assets/profile.png' %}"></a></li>
+      <li><a href="/profile/?name={{request.session.username}}"><img border="0" alt="profile" width="20" height="20" src="{% static 'assets/profile.png' %}"></a></li>
       <li><a href="/settings/"><img border="0" alt="settings" action = "/settings/" width="20" height="20" src="{% static 'assets/settings.png' %}"></a></li>
       <li><a href="/"><img border="0" alt="logout" width="20" height="20" src="{% static 'assets/logout.png' %}"></a></li>
       <hr>
