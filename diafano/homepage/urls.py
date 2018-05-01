@@ -18,6 +18,7 @@ urlpatterns = [
     path('update_u/', views.update_user_settings, name = 'update_settings'),
     path('update_pic/', views.update_pic, name = 'update_pic'),
     url(r'^admin/', admin.site.urls),
+    url(r'^profile/', views.view_profile),
     url(r'^login/$', views.login, name='login'),
     #url(r'^logout/$', views.logout, name='logout'),
     url(r'^auth/', include('social_django.urls', namespace='social'))  # <- Here
