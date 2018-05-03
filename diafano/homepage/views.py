@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 import pyrebase
 import sys
 import os.path
-sys.path.append(os.path.abspath("../diafano-vault/"))
+sys.path.append(os.path.abspath("./diafano-vault/"))
 
 credentials_file = "diafano-vault/credentials.py"
 
@@ -67,6 +67,7 @@ def postsignup(request):
             return render(request, "landing.html", { "messg" : message, "mapbox_access_token" : config['mapboxgl']['accessToken'] })
             uid = user['localId']
         local_user = User.objects.create_user(email, email, passw)
+        login(local_user)
         location = {
             "latitude" : -1,
             "long" : -1
@@ -86,7 +87,7 @@ def postsignup(request):
         database.child("users").child(name).set(data)
 
         request.session['firebase_user'] = user
-        request.session['username'] = username
+        request.session['username'] = name
         # this will be redirecting to settings & dashboard
         return render(request,"dashboard.html", {
             "firebase_apikey" : config['firebaseConfig']['apiKey'],
@@ -201,7 +202,6 @@ def postsignin_google(request):
         uid = user['localId']
         request.session['username'] = name
         request.session['firebase_user'] = user['idToken']
-        request.session['username'] = username
         return render(request,"dashboard.html", {
             "firebase_apikey" : config['firebaseConfig']['apiKey'],
             "mapbox_access_token" : config['mapboxgl']['accessToken'],
