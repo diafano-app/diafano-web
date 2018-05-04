@@ -185,6 +185,7 @@ body .newsfeed_articlecontainer__article {
   -moz-border-radius: 5px;
   margin: 10px auto;
   position: absolute;
+  overflow: scroll;
 }
 body .newsfeed_articlecontainer .article {
   background: #ffffff;
@@ -226,9 +227,9 @@ body .newsfeed_articlecontainer .article_title h1 {
   font-family: 'Varela Round',sans-serif;
   font-size: 27px;
   float: left;
-  position: relative;
-  top: 24px;
-  left: 40px;
+  position: absolute;
+  top: 5%;
+  left: 27%;
 }
 body .newsfeed_articlecontainer .article_content p {
   margin: 0;
@@ -236,18 +237,18 @@ body .newsfeed_articlecontainer .article_content p {
   float: left;
   font-family: 'Varela Round',sans-serif;
   font-size: 14px;
-  position: relative;
-  left: 0px;
-  top: 18px;
+  position: absolute;
+  top: 20%;
+  left: 20%;
   color: #5b586b;
 }
 body .newsfeed_articlecontainer .article_profile img {
   width: 60px;
   height: 60px;
   float: left;
-  position: relative;
-  top: 38px;
-  left: 40px;
+  position: absolute;
+  top: 10%;
+  left: 7%;
 }
 body .newsfeed_articlecontainer .article_profile a {
   float: left;
@@ -257,9 +258,9 @@ body .newsfeed_articlecontainer .article_profile a {
   font-size: 14px;
   text-decoration: none;
   color: #47a3ee;
-  position: relative;
-  top: 50px;
-  left: 56px;
+  position: absolute;
+  top: 29%;
+  left: 8%;
 }
 body .newsfeed_articlecontainer .article_profile p {
   margin: 0;
@@ -268,9 +269,9 @@ body .newsfeed_articlecontainer .article_profile p {
   color: #b3adc7;
   font-size: 12px;
   float: left;
-  position: relative;
-  top: 68px;
-  right: 58px;
+  position: absolute;
+  top: 31%;
+  left: 6.5%;
 }
 
 /* Animation KeyFrames */
@@ -351,4 +352,18 @@ body .newsfeed_articlecontainer .article_profile p {
     -webkit-transform: translateY(-2px);
             transform: translateY(-2px);
   }
+}
+
+
+.slideshow {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    padding: 10px;
+    top: 18%;
+    left: 25%;
+}
+
+.slideshow > div {
+    position: absolute;
 }
