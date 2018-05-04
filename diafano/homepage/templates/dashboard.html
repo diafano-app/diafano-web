@@ -26,8 +26,11 @@
 
     <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
     <script src="https://cdn.firebase.com/js/client/1.1.2/firebase.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.22.1/moment.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.0/mustache.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/spin.js/1.2.7/spin.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+
 </head>
 <body>
   <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
@@ -49,17 +52,17 @@
                   <img src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/343086/arrowDown.png'>
                   <ul>
                     <li>Global</li>
-                    <li>Local</li>
+                    <li>Following</li>
                   </ul>
                 </label>
               </input>
             </div>
             <div class='newsfeed_header__right'>
               <h1>Posts</h1>
-              <span>14.2 K</span>
             </div>
           </div>
-          <div class='newsfeed_articlecontainer'> </div>
+          <div class='newsfeed_articlecontainer'>
+           </div>
         </div>
       </main>
     </nav>
@@ -81,6 +84,11 @@
     var news = database.ref('news');
 
     var news_markers = [];
+    var news_titles = [];
+
+    var moment = window['moment'];
+
+    var t = 0;
     news.on('value', function(snapshot) {
         snapshot.forEach(function(childSnapshot) {
           // map data
@@ -96,39 +104,70 @@
                   "coordinates": [childData['location']['longitude'], childData['location']['latitude']]
               }
           }
+
           news_markers.push(news_data);
 
           // news feed data
           var div = document.createElement('div');
           var author_name = childData["author"]
           var user_retrieve = database.ref('users/' + author_name);
-
           user_retrieve.on('value', function(snapshot) {
             var user_data = snapshot.val();
             if (user_data != undefined){
               div.className = 'newsfeed_articlecontainer__article';
               div.id = 'first';
 
-              div.innerHTML = '<div class="article_published">\
-                    <p>Published in</p>\
-                    <a href="http://diafano.net">Diafano</a>\
-                  </div>\
-                  <div class="article_title">\
-                    <h1>' + childData['title'] + '</h1>\
-                  </div>\
-                  <div class="article_content">\
-                    <p>' + childData['txt'] + '</p>\
-                  </div>\
-                  <div class="article_profile">\
+              div.innerHTML = '<div class="article_profile">\
                     <img src=' + user_data['profile_picture'] + '>\
                     <a href="/profile/?name='+ author_name +'" target="_blank">' + author_name + '</a>\
-                    <p><br>4hrs ago</p></div>';
+                    <p><br> ' + moment.min(moment(), moment(childData['date_created'])).fromNow() + ' </p></div>\
+                    <div class="article_title">\
+                      <h1>' + childData['title'] + '</h1>\
+                    </div>';
+              if (childData['media_path']['image_path']){
+                    // div.innerHTML += '<div class="slideshow">';
+                    var slide_div = document.createElement('div');
+                    slide_div.className = 'slideshow';
 
-              document.getElementsByClassName('newsfeed_articlecontainer')[0].appendChild(div);
+                    var arrayLength = childData['media_path']['image_path'].length;
+                    for (var i = 0; i < arrayLength; i++) {
+                        slide_div.innerHTML += '<div>\
+                          <img src="' + childData['media_path']['image_path'][i] + '" width="200px" height="200px">\
+                        </div>'
+                    }
+                    div.innerHTML += '<div class="article_content" style="top: 35%;">\
+                            <p>' + childData['txt'] + '</p>\
+                          </div>';
+              }
+              else{
+                div.innerHTML += '<div class="article_content">\
+                        <p>' + childData['txt'] + '</p>\
+                      </div>';
+              }
+
+              if (news_titles.indexOf(childData['title']) == -1){
+                news_titles.push(childData['title']);
+                document.getElementsByClassName('newsfeed_articlecontainer')[0].appendChild(div);
+                if(slide_div){
+                  document.getElementsByClassName('newsfeed_articlecontainer__article')[t].appendChild(slide_div);
+                }
+                console.log(t);
+                t += 1;
+              }
             }
           });
         });
     });
+    $(".slideshow > div:gt(0)").hide();
+
+    setInterval(function() {
+      $('.slideshow > div:first')
+        .fadeOut(1000)
+        .next()
+        .fadeIn(1000)
+        .end()
+        .appendTo('.slideshow');
+    }, 3000);
 
     mapboxgl.accessToken = "{{mapbox_access_token}}";
     var map = new mapboxgl.Map({
@@ -140,26 +179,78 @@
     });
 
     map.on("load", function () {
+
+      // add post count below Posts
+      var element = document.createElement("span");
+      var count = document.createTextNode(news_markers.length);
+      element.appendChild(count);
+      document.getElementsByClassName('newsfeed_header__right')[0].appendChild(element);
+
+      map.addSource("points", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: news_markers
+        },
+        cluster: true,
+        clusterMaxZoom: 14,
+        clusterRadius: 50
+      });
+
       map.loadImage("https://i.imgur.com/MK4NUzI.png", function(error, image) {
           if (error) throw error;
           map.addImage("custom-marker", image);
           map.addLayer({
-            id: "markers",
-            type: "symbol",
-            source: {
-              type: "geojson",
-              data: {
-                type: "FeatureCollection",
-                features: news_markers
-              }
-            },
-            layout: {
-              "icon-image": "custom-marker",
-            }
+              id: "unclustered-point",
+              type: "symbol",
+              source: "points",
+              filter: ["!has", "point_count"],
+              layout: {
+                  "icon-image": "custom-marker",
+                }
           });
         });
 
-      map.on('click', 'markers', function (e) {
+      map.addLayer({
+        id: "clusters",
+        type: "circle",
+        source: "points",
+        filter: ["has", "point_count"],
+        paint: {
+          "circle-color": [
+                "step",
+                ["get", "point_count"],
+                "#51bbd6",
+                100,
+                "#f1f075",
+                750,
+                "#f28cb1"
+            ],
+            "circle-radius": [
+                "step",
+                ["get", "point_count"],
+                20,
+                100,
+                30,
+                750,
+                40
+            ]
+        }
+    });
+
+    map.addLayer({
+        id: "cluster-count",
+        type: "symbol",
+        source: "points",
+        filter: ["has", "point_count"],
+        layout: {
+            "text-field": "{point_count_abbreviated}",
+            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+            "text-size": 12
+        }
+    });
+
+      map.on('click', 'unclustered-point', function (e) {
           var coordinates = e.features[0].geometry.coordinates.slice();
           var description = e.features[0].properties.description;
 
@@ -173,12 +264,12 @@
               .addTo(map);
       });
 
-      map.on('mouseenter', 'markers', function () {
+      map.on('mouseenter', 'unclustered-point', function () {
           map.getCanvas().style.cursor = 'pointer';
       });
 
       // Change it back to the pointer when mouse leaves
-      map.on('mouseleave', 'markers', function () {
+      map.on('mouseleave', 'unclustered-point', function () {
           map.getCanvas().style.cursor = '';
       });
 
