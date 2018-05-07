@@ -6,7 +6,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-       
+
 <script type="text/javascript">
     function show_email() {
         //document.getElementById("dThreshold").display ="block";
@@ -47,16 +47,17 @@
   <div class="logmod__wrapper">
     <span class="logmod__close">Close</span>
     <div class="logmod__container">
-      <ul class="logmod__tabs">
-        <li data-tabtar="lgm-1"><a href="{% url 'signup' %}/#login" style = "text-align = center">Your Profile</a></li>
-      </ul>
+      <a href="{% url 'dashboard' %}"><img border="0" alt="home" width="40" height="40" src="{% static 'assets/back.png' %}"></a><h2 style = "position: inherit; text-align: center;">{{username}}'s Profile Info</h2>
+        <ul class="logmod__tabs">
+          <li data-tabtar="lgm-1"><a style = "text-align = center; height: 0px;"></a></li>
+        </ul>
       <div class="logmod__tab-wrapper">
       <div class="logmod__tab lgm-1" id="signup">
         <div class="logmod__heading">
           <span class="logmod__heading-subtitle"><strong></strong></span>
         </div>
         <div class="logmod__form">
-          
+
             {% csrf_token %}
             <img class="md-avatar" src={{profile_picture}} alt="mert" style="width:100%;">
             <div class="sminputs">
@@ -78,13 +79,13 @@
                             <input type="submit" value="submit">
                         </div>
                     </form>
-                   
+
                 </div>
             </div>
-                   
-                  
+
+
             </div>
-            
+
               </div>
               <div class="sminputs">
                     <div class="input full" style="height: 10%;">
@@ -115,7 +116,7 @@
                                       <input type="submit" value="submit">
                                   </div>
                               </form>
-                             
+
                           </div>
               </div>
             </div>
@@ -132,15 +133,15 @@
                                         <input id="key" name = "key" type="hidden" value="bio">
                                         <input type="submit" value="upload">
                                     </div>
-                                
+
                               </form>
-                             
+
                           </div>
               </div>
             </div>
-          
-           
-          
+
+
+
         </div>
 
       </div>
@@ -151,10 +152,10 @@
         <div class="logmod__form">
           <form accept-charset="utf-8" action="/postsignin/" method = "post" class="simform">
             {% csrf_token %}
-            
+
           </form>
         </div>
-     
+
           </div>
       </div>
     </div>

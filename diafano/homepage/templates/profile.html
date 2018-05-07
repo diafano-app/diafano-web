@@ -6,22 +6,18 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-        
+
 <script type="text/javascript">
     function show_email() {
-        //document.getElementById("dThreshold").display ="block";
         document.getElementById("email-input").style.display = "block";
     }
     function show_phone() {
-        //document.getElementById("dThreshold").display ="block";
         document.getElementById("phone-input").style.display = "block";
     }
     function show_bio() {
-        //document.getElementById("dThreshold").display ="block";
         document.getElementById("bio-input").style.display = "block";
     }
     function show_pic() {
-        //document.getElementById("dThreshold").display ="block";
         document.getElementById("pic-input").style.display = "block";
     }
 </script>
@@ -46,9 +42,19 @@
     <div class="logmod">
     <div class="logmod__wrapper">
     <span class="logmod__close">Close</span>
+    <form accept-charset="utf-8" action="/profile/?name=" class="simform" method="post">
+      {% csrf_token %}
+      <div class="sminputs">
+        <div class="input full">
+          <label class="string optional" for="user-name">Write a username you'd like to visit</label>
+          <input class="string optional" maxlength="50" id="user-name" name="username" placeholder="Username" type="text" size="50" />
+        </div>
+      </div>
+    </form>
     <div class="logmod__container">
+      <a href="{% url 'dashboard' %}"><img border="0" alt="home" width="40" height="40" src="{% static 'assets/back.png' %}"></a><h2 style = "position: inherit; text-align: center;">{{username}}'s Profile Info</h2>
         <ul class="logmod__tabs">
-        <li data-tabtar="lgm-1"><a href="{% url 'signup' %}/#login" style = "text-align = center">Profile Info</a></li>
+          <li data-tabtar="lgm-1"><a style = "text-align = center; height: 0px;"></a></li>
         </ul>
         <div class="logmod__tab-wrapper">
         <div class="logmod__tab lgm-1" id="signup">
@@ -56,7 +62,7 @@
             <span class="logmod__heading-subtitle"><strong></strong></span>
         </div>
         <div class="logmod__form">
-            
+
             {% csrf_token %}
             <img class="md-avatar" src={{profile_picture}} alt="mert" style="width:100%;">
             <div class="sminputs">
@@ -69,19 +75,19 @@
                 <div class="input full" style="height: 10%;">
                     <label id="string-optional" for="user-name">Email</label>
                     <div id="email">{{email}}
-                    
+
                 </div>
             </div>
-                    
-                    
+
+
             </div>
-            
+
                 </div>
                 <div class="sminputs">
                     <div class="input full" style="height: 10%;">
                             <label id="string-optional" for="phone_number">Phone Number</label>
                             <div id="email">{{phone_number}}
-                           
+
                             </div>
                 </div>
             </div>
@@ -89,16 +95,16 @@
                     <div class="input full" style="height: 10%;">
                             <label id="string-optional" for="bio">Bio</label>
                             <div id="bio">{{bio}}
-                           
-                                
+
+
                             </div>
                 </div>
             </div>
                 </div>
-                
-            
-            
-            
+
+
+
+
         </div>
 
         </div>
@@ -109,10 +115,10 @@
         <div class="logmod__form">
             <form accept-charset="utf-8" action="/postsignin/" method = "post" class="simform">
             {% csrf_token %}
-            
+
             </form>
         </div>
-        
+
             </div>
         </div>
     </div>
