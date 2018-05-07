@@ -27,7 +27,6 @@ def landing(request):
     return render(request,"landing.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
 
 def session_logout(request):
-    # [sp.session.delete() for sp in SessionProfile.objects]
     logout(request)
     return landing(request)
 
@@ -47,16 +46,20 @@ def signUp(request):
             "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})
 
 def dashboard(request):
-    return render(request,"dashboard.html", {
-        "firebase_apikey" : config['firebaseConfig']['apiKey'],
-        "mapbox_access_token" : config['mapboxgl']['accessToken'],
-        "firebase_authdomain" : config['firebaseConfig']['authDomain'],
-        "firebase_dburl" : config['firebaseConfig']['databaseURL'],
-        "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})
+    if not request.user.is_anonymous:
+        return render(request,"dashboard.html", {
+            "firebase_apikey" : config['firebaseConfig']['apiKey'],
+            "mapbox_access_token" : config['mapboxgl']['accessToken'],
+            "firebase_authdomain" : config['firebaseConfig']['authDomain'],
+            "firebase_dburl" : config['firebaseConfig']['databaseURL'],
+            "firebase_storagebucket" : config['firebaseConfig']['storageBucket']})
+    else:
+        return render(request,"landing.html", {"mapbox_access_token" : config['mapboxgl']['accessToken']})
+
 
 def postsignup(request):
     if request.user.is_anonymous:
-        name = request.POST.get('name')
+        name = request.POST.get('username')
         email = request.POST.get('email')
         passw = request.POST.get('pass')
         try:
@@ -67,7 +70,7 @@ def postsignup(request):
             return render(request, "landing.html", { "messg" : message, "mapbox_access_token" : config['mapboxgl']['accessToken'] })
             uid = user['localId']
         local_user = User.objects.create_user(email, email, passw)
-        login(local_user)
+        login(request, local_user, backend='django.contrib.auth.backends.ModelBackend')
         location = {
             "latitude" : -1,
             "long" : -1
@@ -80,8 +83,7 @@ def postsignup(request):
             "location_share" : "False",
             "name" : "",
             "phone_number" : "-1",
-            "profile_picture" : "https://firebasestorage.googleapis.com/v0/b\
-            /diafano-d139c.appspot.com/o/profiledefault.png?alt=media&token=25d375c4-f233-442b-8c1b-1a7b5ab656df",
+            "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/diafano-d139c.appspot.com/o/profiledefault.png?alt=media&token=25d375c4-f233-442b-8c1b-1a7b5ab656df",
             "trust_rank" : 0
         }
         database.child("users").child(name).set(data)
@@ -130,8 +132,7 @@ def postsignup_google(request):
             "location_share" : "False",
             "name" : "",
             "phone_number" : "-1",
-            "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/diafano-d139c.appspot.com/o\
-            /profiledefault.png?alt=media&token=25d375c4-f233-442b-8c1b-1a7b5ab656df",
+            "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/diafano-d139c.appspot.com/o/profiledefault.png?alt=media&token=25d375c4-f233-442b-8c1b-1a7b5ab656df",
             "trust_rank" : 0
         }
 
@@ -289,12 +290,14 @@ def view_profile(request):
     if 'name' in request.GET and request.GET['name']:
         user = request.GET['name']
     else:
-        return HttpResponse('Please submit a search term.')
+        user = request.POST.get('username')
+        if user is None:
+            return HttpResponse('something went wrong!')
 
     try:
         users_by_email = database.child("users").child(user).get().val()
     except:
-        return HttpResponse('Enter a valid user name!.')
+        return HttpResponse('Enter a valid user name!')
 
     users_by_email = dict(users_by_email)
     username = list(users_by_email)[0]
