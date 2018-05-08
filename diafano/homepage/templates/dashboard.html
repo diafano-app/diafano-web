@@ -52,25 +52,17 @@
               <h1>Posts</h1>
             </div>
           </div>
+          <!-- vod -->
+          <!-- <video width="640" height="400" controls="controls" src="http://138.68.104.54:1935/vod/mp4:null_1525120287821.mp4/playlist.m3u8"></video> -->
+          <!-- live -->
+          <!-- <video width="640" height="400" controls="controls" src="http://138.68.104.54:1935/live/figalitaho_1525794032775/playlist.m3u8"></video> -->
+          <!-- lightbox container hidden with CSS -->
           <div class='newsfeed_articlecontainer'>
-            <!-- thumbnail wrapped in a link -->
-              <a href="#img1">
-               <center> <img src="{% static 'assets/play.png' %}" height="90"> </center>
-              </a>
-              <video width="640" height="400" controls="controls" src="http://138.68.104.54:1935/vod/mp4:null_1525120287821.mp4/playlist.m3u8"></video>
-              <!-- lightbox container hidden with CSS -->
-              <a href="#_" class="lightbox" id="img1">
-              <div id="videoModal" class="modal hide fade in" tabindex="-1" role="dialog" aria-labelledby="videoModalLabel" aria-hidden="false" style="display: block;">
-                <div class="modal-header">
-                  <button type="button" class="close full-height" data-dismiss="modal" aria-hidden="true">X</button>
-                  <h3>Donna Galletta- Showreel</h3>
-                </div>
-                <!-- <div class="modal-body"><iframe width="870" height="489" src="https://www.youtube.com/embed/SvuoDerqNW0" frameborder="0" allowfullscreen=""></iframe></div> -->
-                <div class="modal-body"><video width="640" height="400" controls="controls" src="http://diafano.net:1935/vod/mp4:Lewis_1525721077235.mp4/Lewis_1525721077235.mp4"></video></div>
-                <div class="modal-footer"></div>
-              </div>
-
-           </div>
+            <a href="#" class="lightbox" id="img1"></a>
+            <div class="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModalLabel" aria-hidden="false" style="display: none;">
+              <div class="modal-body"><video width="870" height="489" id="videoshow" controls="controls" ><source src="" type="video/mp4"></source></video></div>
+            </div>
+         </div>
         </div>
       </main>
     </nav>
@@ -132,58 +124,34 @@
                     <div class="article_title">\
                       <h1>' + childData['title'] + '</h1>\
                     </div>';
-              // if (childData['media_path']['image_path']){
-              //       // div.innerHTML += '<div class="slideshow">';
-              //       var slide_div = document.createElement('div');
-              //       slide_div.className = 'slideshow';
-              //
-              //       var arrayLength = childData['media_path']['image_path'].length;
-              //       for (var i = 0; i < arrayLength; i++) {
-              //           slide_div.innerHTML += '<div>\
-              //             <img src="' + childData['media_path']['image_path'][i] + '" width="200px" height="200px">\
-              //           </div>'
-              //       }
-              //       div.innerHTML += '<div class="article_content" style="top: 35%;">\
-              //               <p>' + childData['txt'] + '</p>\
-              //             </div>';
-              // }
-              // else{
                 div.innerHTML += '<div class="article_content">\
                         <p>' + childData['txt'] + '</p>\
                       </div>';
-              // }
-              // var video_div = document.createElement('div');
-              // video_div.className = 'modalDialog';
-              //
-              // div.innerHTML += '<a href="#joinEventModal1">JOIN</a><div> <a class="closebutton" href="#close">X</a> </div>';
+                if (childData['type'] == "BROADCAST"){
+                  var aTag = document.createElement('a');
+                  var secondTag = document.createElement('a');
+                  var imgTag = document.createElement('img');
+                  aTag.setAttribute('href',"#img1");
+                  aTag.setAttribute('id',"play_button");
+                  aTag.setAttribute('onClick',"changevid('http://138.68.104.54:1935/vod/mp4:" + childData['media_path']['broadcast_name'] + "/playlist.m3u8')");
 
-              // <div class="modalDialog">
-          		// 	<div> <a class="closebutton" href="#close">X</a> </div>
-          	  // </div>
+                  imgTag.setAttribute('src',"{% static 'assets/play.png' %}");
+                  imgTag.setAttribute('height',"90");
+                  aTag.appendChild(imgTag);
+                  div.appendChild(aTag);
+                }
               if (news_titles.indexOf(childData['title']) == -1){
                 news_titles.push(childData['title']);
                 document.getElementsByClassName('newsfeed_articlecontainer')[0].appendChild(div);
-                // if(slide_div){
-                //   document.getElementsByClassName('newsfeed_articlecontainer__article')[t].appendChild(slide_div);
-                // }
-                // console.log(t);
-                // t += 1;
               }
             }
           });
         });
     });
-    $(".slideshow > div:gt(0)").hide();
 
-    setInterval(function() {
-      $('.slideshow > div:first')
-        .fadeOut(1000)
-        .next()
-        .fadeIn(1000)
-        .end()
-        .appendTo('.slideshow');
-    }, 3000);
-
+    function changevid(buttonlink) {
+        document.getElementById('videoshow').src = buttonlink;
+    }
     mapboxgl.accessToken = "{{mapbox_access_token}}";
     var map = new mapboxgl.Map({
       container: 'map',
@@ -212,7 +180,7 @@
         clusterRadius: 50
       });
 
-      map.loadImage("https://i.imgur.com/MK4NUzI.png", function(error, image) {
+      map.loadImage("{% static 'assets/blue_marker.png' %}", function(error, image) {
           if (error) throw error;
           map.addImage("custom-marker", image);
           map.addLayer({
