@@ -223,24 +223,26 @@ body .newsfeed_articlecontainer .article_published a {
   margin: 0;
   padding: 0;
 }
-body .newsfeed_articlecontainer .article_title h1 {
+body .newsfeed_articlecontainer .article_title p1 {
   font-family: 'Varela Round',sans-serif;
   font-size: 27px;
   float: left;
-  position: absolute;
-  top: 5%;
-  left: 27%;
+  margin-top: 5%;
+  margin-left: 24%;
+  margin-right: 28%;
+  display: block;
+  margin-bottom: auto;
 }
-body .newsfeed_articlecontainer .article_content p {
+body .newsfeed_articlecontainer .article_content p2 {
   margin: 0;
   padding: 0 40px 0 40px;
   float: left;
   font-family: 'Varela Round',sans-serif;
   font-size: 14px;
-  position: absolute;
-  top: 20%;
-  left: 20%;
+  margin-left: 17%;
+  margin-top: auto;
   color: #5b586b;
+  display: block;
 }
 body .newsfeed_articlecontainer .article_profile img {
   width: 60px;
