@@ -85,6 +85,7 @@ nav a	{
   height: 100%;
   position:relative;
   z-index:999;
+  margin-top: 20%;
 }
 .modal-header {
   background: #000;
@@ -105,4 +106,17 @@ video {
   height: 100%;
   width: 100%;
   background: black;
+}
+
+#play_button img {
+  margin-top: 10%;
+  margin-left: 25%;
+  display: block;
+}
+
+#news_media {
+  margin-top: 10%;
+  margin-left: 23%;
+  margin-right: 12%;
+  display: block;
 }
